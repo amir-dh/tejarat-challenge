@@ -2,13 +2,12 @@ import {
     Entity,
     Column,
     Index,
-    AfterLoad,
-    BeforeUpdate,
     PrimaryGeneratedColumn,
     CreateDateColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
+    BeforeInsert
 } from 'typeorm';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 @Entity({ name: 'user' })
 export class User {
@@ -31,20 +30,11 @@ export class User {
 
     @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
     updatedTime: Date;
-
-    private tempPassword: string;
-
-    @AfterLoad()
-    private loadTempPassword(): void {
-        this.tempPassword = this.password;
-    }
-
-    @BeforeUpdate()
-    private encryptPass(): void {
-        if (this.tempPassword !== this.password) {
-            bcrypt.hash(this.tempPassword, 10, function (err: unknown, hash: string) {
-                this.password = hash;
-            });
-        }
+     
+    @BeforeInsert()
+    async hashPassword() {
+      if (this.password) {
+        this.password = await bcrypt.hash(this.password, 10);
+      }
     }
 }
