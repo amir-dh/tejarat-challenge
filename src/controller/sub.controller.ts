@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { SubService } from 'src/services/sub.service';
 import subRequest from 'src/model/sub.request.model';
-import { AuthGuard } from 'src/auth.guard';
+import { AuthGuard } from 'src/configs/auth.guard';
 import { Request } from 'express';
 
 @Controller('subscription')

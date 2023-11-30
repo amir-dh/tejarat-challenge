@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
 import { PlanService } from 'src/services/plan.service';
 import planRequest from 'src/model/plan.request.model';
-import { AuthGuard } from 'src/auth.guard';
+import { AuthGuard } from 'src/configs/auth.guard';
 
 @Controller('plan')
 export class PlanController {

@@ -16,10 +16,10 @@ export class User {
     id: number;
 
     @Index({ unique: true })
-    @Column({ type: 'varchar', length: 300, nullable: false, unique: true })
+    @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
     username: string;
 
-    @Column({ type: 'varchar', length: 300, nullable: false })
+    @Column({ type: 'varchar', length: 72, nullable: false })
     password: string;
 
     @Column({ type: 'boolean', default: true })

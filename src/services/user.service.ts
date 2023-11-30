@@ -23,15 +23,15 @@ export class UserService {
     const isExist = await this.userRepository.exist({ where: { username: req.username } })
     if (isExist) {
       throw new HttpException('User already exists!!', HttpStatus.BAD_REQUEST);
-    } else {
-      const res: userResponse = new userResponse();
-      const user = await this.userRepository.save(data)
-      res.username = user.username;
-      res.isActive = user.isActive;
-      res.createdTime = user.createdTime;
-      res.updatedTime = user.updatedTime;
-      return res;
-    };
+    }
+    
+    const res: userResponse = new userResponse();
+    const user = await this.userRepository.save(data)
+    res.username = user.username;
+    res.isActive = user.isActive;
+    res.createdTime = user.createdTime;
+    res.updatedTime = user.updatedTime;
+    return res;
   }
 
   async login(req: userRequest): Promise<any> {
