@@ -3,10 +3,14 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToOne,
+    Column,
 } from 'typeorm';
-import { User } from './user.entity';
-import { Plan } from './plan.entity';
+
+export enum Status {
+    INCOMPLETE = 'incomplete',
+    COMPLETE = 'complete',
+    EXPIRED = 'expired'
+}
 
 @Entity({ name: 'subscription' })
 export class Subsctiption {
@@ -14,11 +18,20 @@ export class Subsctiption {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @ManyToOne(() => User, (user) => user.id)
+    @Column({ type: 'integer', nullable: false })
     userId: number;
 
-    @ManyToOne(() => Plan, (plan) => plan.id)
+    @Column({ type: 'integer', nullable: false })
     planId: number;
+
+    @Column({ type: 'enum', enum: Status, default: Status.INCOMPLETE})
+    status: Status;
+
+    @Column({ type: 'timestamptz' })
+    from: Date;
+
+    @Column({ type: 'timestamptz' })
+    to: Date;
 
     @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
     createdTime: Date;

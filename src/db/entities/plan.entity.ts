@@ -6,6 +6,13 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 
+export enum DurationType {
+    YEAR = 'year',
+    MONTH = 'month',
+    WEEK = 'week',
+    DAY = 'day'
+}
+
 @Entity({ name: 'plan' })
 export class Plan {
 
@@ -17,6 +24,12 @@ export class Plan {
 
     @Column({ type: 'integer', nullable: false })
     price: number;
+
+    @Column({ type: 'integer', nullable: false })
+    duration: number;
+
+    @Column({ type: 'enum', enum: DurationType, nullable: false })
+    durationType: DurationType;
 
     @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
     createdTime: Date;

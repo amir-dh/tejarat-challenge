@@ -4,6 +4,7 @@ import planRequest from 'src/model/plan.request.model';
 import planResponse from 'src/model/plan.response.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { PlanMapper } from 'src/mapper/plan.mapper';
 
 @Injectable()
 export class PlanService {
@@ -11,17 +12,10 @@ export class PlanService {
   constructor(@InjectRepository(Plan) private readonly planRepository: Repository<Plan>) { }
 
   async create(req: planRequest): Promise<any> {
-    const data: Plan = new Plan();
-    data.name = req.name;
-    data.price = req.price;
-    const res: planResponse = new planResponse();
+    const data: Plan = PlanMapper.toEntity(req);
     const plan = await this.planRepository.save(data)
-    res.id = plan.id;
-    res.name = plan.name;
-    res.price = plan.price;
-    res.createdTime = plan.createdTime;
-    res.updatedTime = plan.updatedTime;
-    return res;
+
+    return PlanMapper.toResponse(plan);
   }
 
   async update(id: number, req: planRequest): Promise<any> {
@@ -30,17 +24,11 @@ export class PlanService {
     if (!oldPlan) {
       throw new NotFoundException();
     }
+    var newPlan = PlanMapper.toEntity(req);
+    newPlan.id = oldPlan.id;
+    const plan = await this.planRepository.save(newPlan)
 
-    oldPlan.name = req.name;
-    oldPlan.price = req.price;
-    const res: planResponse = new planResponse();
-    const plan = await this.planRepository.save(oldPlan)
-    res.id = plan.id;
-    res.name = plan.name;
-    res.price = plan.price;
-    res.createdTime = plan.createdTime;
-    res.updatedTime = plan.updatedTime;
-    return res;
+    return PlanMapper.toResponse(plan);
   }
 
   async delete(id: number): Promise<any> {
@@ -57,15 +45,7 @@ export class PlanService {
     const plan = await this.planRepository.find();
     const res: Array<planResponse> = new Array();
     plan.map(item => {
-      const plan: planResponse = new planResponse();
-
-      plan.id = item.id;
-      plan.name = item.name;
-      plan.price = item.price;
-      plan.createdTime = item.createdTime;
-      plan.updatedTime = item.updatedTime;
-
-      res.push(plan);
+      res.push(PlanMapper.toResponse(item));
     })
 
     return res;
@@ -75,14 +55,6 @@ export class PlanService {
     const plan = await this.planRepository.findOne({ where: { id } });
     if (!plan) throw new NotFoundException();
 
-    const res: planResponse = new planResponse();
-
-    res.id = plan.id;
-    res.name = plan.name;
-    res.price = plan.price;
-    res.createdTime = plan.createdTime;
-    res.updatedTime = plan.updatedTime;
-    
-    return res;
+    return PlanMapper.toResponse(plan);
   }
 }

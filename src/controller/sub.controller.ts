@@ -15,6 +15,12 @@ export class SubController {
   }
 
   @UseGuards(AuthGuard)
+  @Put(':id')
+  paid(@Param('id', new ParseIntPipe()) id: number, @Req() req: Request): any {
+    return this.subService.paid(id, req);
+  }
+
+  @UseGuards(AuthGuard)
   @Delete(':id')
   delete(@Param('id', new ParseIntPipe()) id: number, @Req() req: Request): any {
     return this.subService.delete(id, req);
