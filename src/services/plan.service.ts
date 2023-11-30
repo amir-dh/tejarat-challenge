@@ -70,4 +70,19 @@ export class PlanService {
 
     return res;
   }
+
+  async get(id: number): Promise<any> {
+    const plan = await this.planRepository.findOne({ where: { id } });
+    if (!plan) throw new NotFoundException();
+
+    const res: planResponse = new planResponse();
+
+    res.id = plan.id;
+    res.name = plan.name;
+    res.price = plan.price;
+    res.createdTime = plan.createdTime;
+    res.updatedTime = plan.updatedTime;
+    
+    return res;
+  }
 }

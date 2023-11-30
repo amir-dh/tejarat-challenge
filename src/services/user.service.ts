@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compareSync } from 'bcrypt';
 import { User as userEntity } from 'src/db/entities/user.entity';
@@ -43,5 +43,13 @@ export class UserService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async get(id: number): Promise<any> {
+    const user = await this.userRepository.findOne({ where: { id: id, isActive: true } });
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user;
   }
 }

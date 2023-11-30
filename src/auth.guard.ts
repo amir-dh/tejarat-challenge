@@ -25,7 +25,7 @@ import {
             secret: jwtConstants.secret
           }
         );
-        request['user'] = payload;
+        request.headers['userId'] = payload.sub;
       } catch {
         throw new UnauthorizedException();
       }
